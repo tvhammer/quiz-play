@@ -8,51 +8,47 @@ import java.util.stream.LongStream;
 
 public class LongestCollatzSequence {
     public static void main(String[] args) {
-//        List<Long> nums = Arrays.asList(10l, 15l, 20l, 1000l, 1000000l, 4596415l);
+//        List<Integer> nums = Arrays.asList(10);
+//        List<Integer> nums = Arrays.asList(10, 15, 20, 1000, 1000000, 4596415);
 
-        List<Long> nums = LongStream.iterate(5000000, s -> s >= 100000, s -> s - 250).boxed().collect(Collectors.toList());
+        List<Integer> nums = IntStream.iterate(5000000, s -> s >= 100000, s -> s - 250).boxed().collect(Collectors.toList());
 
+        List<Integer> lengthMap = buildCollatz(5000000);
 
-        long max = Collections.max(nums);
-        Map<Long, Long> lengthMap = buildCollatz(max);
-
-        for (long n : nums) {
+        for (int n : nums) {
             System.out.println(lengthMap.get(n));
         }
     }
 
-    static Map<Long, Long> buildCollatz(long num) {
-        Map<Long, Integer> cache = new HashMap<>();
-        Map<Long, Long> lengthMap = new HashMap<>();
-        cache.put(1L, 0);
+    static List<Integer> buildCollatz(int max) {
+        List<Integer> cache = new ArrayList<>();
+        List<Integer> lengthMap = new ArrayList<>();
+        cache.add(0);  // to align the index with the array index
+        lengthMap.add(0); // to align the index with the array index
         int longestVal = 0;
-        long longestItem = 0;
-        for (long i = 1; i <=num; i++) {
-            if(!cache.containsKey(i)) {
-                List<Long> collList = new ArrayList<>();
-                long res = i;
-                int middle = 0;
-                while (res != 1) {
-                    if (cache.containsKey(res)) {
-                        middle = cache.get(res);
-                        break;
-                    } else {
-                        collList.add(res);
-                        res = nextCollatz(res);
-                    }
-                }
-                for (int ii = collList.size() - 1; ii >= 0; ii--) {
-                    cache.put(collList.get(ii), collList.size() - ii + middle);
+        int longestItem = 0;
+        for (int i = 1; i <= max; i++) {
+            long res = i;
+            int middle = 0;
+            int counter = 0;
+            while (res != 1) {
+                if (res <= Integer.MAX_VALUE && cache.size() > res) {
+                    middle = cache.get((int) res);
+                    break;
+                } else {
+                    counter++;
+                    res = nextCollatz(res);
                 }
             }
+            cache.add(counter + middle);
 
             int current = cache.get(i);
             if (current >= longestVal) {
-                lengthMap.put(i, i);
+                lengthMap.add(i, i);
                 longestVal = current;
                 longestItem = i;
             } else {
-                lengthMap.put(i, longestItem);
+                lengthMap.add(i, longestItem);
             }
         }
         return lengthMap;
