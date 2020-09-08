@@ -4,13 +4,13 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class LongestCollatzSequence {
     public static void main(String[] args) {
-        List<Long> nums = Arrays.asList(10l, 15l, 20l, 1000l, 1000000l, 4596415l);
+//        List<Long> nums = Arrays.asList(10l, 15l, 20l, 1000l, 1000000l, 4596415l);
 
-        // generate ~ 1000 nums
-//        List<Long> nums = IntStream.iterate(5000000, s -> s >= 100000, s -> s - 5000).boxed().collect(Collectors.toList());
+        List<Long> nums = LongStream.iterate(5000000, s -> s >= 100000, s -> s - 250).boxed().collect(Collectors.toList());
 
 
         long max = Collections.max(nums);
